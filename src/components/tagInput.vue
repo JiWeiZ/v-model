@@ -3,11 +3,12 @@
     <input
       type="text"
       class="tag-input"
-      :style="{width: inputWidth+'em'}"
+      :style="{width: inputWidth + 'em'}"
       maxlength="20"
+      :value="tagValue"
       v-bind="$attrs"
       v-on="inputListeners"
-      :value="tagValue"
+      v-focus
     ><span class="tag-input-icon"><i class="fas fa-times" @click="emitDeleteTag"></i></span>
   </div>
 </template>
@@ -26,6 +27,11 @@ export default {
   },
   props: {
     tagValue: String
+  },
+  data () {
+    return {
+      readyToDelete: false
+    }
   },
   computed: {
     // input框宽度随字数自适应
@@ -53,7 +59,21 @@ export default {
           vm.$emit('input', e.target.value)
         },
         blur () {
-          if (vm.value === '') vm.emitDeleteTag()
+          if (vm.tagValue === '') vm.emitDeleteTag()
+        },
+        keydown (e) {
+          if (e.keyCode === 8 || e.keyCode === 46) {
+            vm.readyToDelete = true
+          }
+        },
+        keyup (e) {
+          if (e.keyCode === 8 || e.keyCode === 46) {
+            if (vm.readyToDelete) {
+              vm.emitDeleteTag()
+              vm.$emit('focusPrevious')
+              vm.readyToDelete = false
+            }
+          }
         }
       })
     }

@@ -7,6 +7,7 @@
       v-model="item.value"
       @keydown.enter.native="onAddTag"
       @deleteTag="onDeleteTag(index)"
+      @focusPrevious="onFocusPrevious(index)"
     ></div>
     <div v-if="this.tagInputs.length < this.maxTagNum" class="tag-title" @click="onAddTag">
       <i class="fas fa-plus-square"></i><span class="tag-title-content"><slot></slot></span>
@@ -46,6 +47,11 @@ export default {
     onDeleteTag (index) {
       if (this.tagInputs.length) {
         this.tagInputs.splice(index, 1)
+      }
+    },
+    onFocusPrevious (index) {
+      if (index !== 0) {
+        this.$el.children[index - 1].children[0].focus()
       }
     }
   }
