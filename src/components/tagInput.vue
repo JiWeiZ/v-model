@@ -26,32 +26,15 @@ export default {
     prop: 'tagValue'
   },
   props: {
-    tagValue: String
+    tagValue: [String, Number]
   },
   data () {
     return {
-      readyToDelete: false
+      readyToDelete: false,
+      inputWidth: 1
     }
   },
   computed: {
-    // input框宽度随字数自适应
-    inputWidth () {
-      // 考虑中英文字符宽度不同
-      let tagValue = this.tagValue
-      if (tagValue && tagValue.length) {
-        let reLen = 0
-        for (let i = 0; i < tagValue.length; i++) {
-          if (tagValue.charCodeAt(i) >= 0 && tagValue.charCodeAt(i) <= 128) {
-            reLen += 0.5
-          } else {
-            reLen += 1
-          }
-        }
-        return reLen + 1
-      } else {
-        return 1
-      }
-    },
     inputListeners () {
       let vm = this
       return Object.assign({}, this.$listeners, {
@@ -81,6 +64,25 @@ export default {
   methods: {
     emitDeleteTag () {
       this.$emit('deleteTag')
+    }
+  },
+  watch: {
+    tagValue () {
+      // 考虑中英文字符宽度不同
+      let tagValue = this.tagValue
+      if (tagValue && tagValue.length) {
+        let reLen = 0
+        for (let i = 0; i < tagValue.length; i++) {
+          if (tagValue.charCodeAt(i) >= 0 && tagValue.charCodeAt(i) <= 128) {
+            reLen += 0.5
+          } else {
+            reLen += 1
+          }
+        }
+        this.inputWidth = (reLen + 1)
+      } else {
+        this.inputWidth = 1
+      }
     }
   }
 }

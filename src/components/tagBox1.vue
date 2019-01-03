@@ -1,14 +1,15 @@
 <template>
   <div class="tag-box">
-    <tag-input
-      v-for="(item, index) in tags"
-      :key="index"
-      v-model="tags[index]"
+    <div
+      v-for="(item, index) in tagInputs"
+      :key="item.id"
+      :is="item.component"
+      v-model="item.value"
       @keydown.enter.native="onAddTag"
       @deleteTag="onDeleteTag(index)"
       @focusPrevious="onFocusPrevious(index)"
-    ></tag-input>
-    <div v-if="this.tags.length < this.maxTagNum" class="tag-title" @click="onAddTag">
+    ></div>
+    <div v-if="this.tagInputs.length < this.maxTagNum" class="tag-title" @click="onAddTag">
       <i class="fas fa-plus-square"></i><span class="tag-title-content"><slot></slot></span>
     </div>
   </div>
@@ -22,31 +23,30 @@ export default {
     tagInput
   },
   props: {
-    maxTagNum: {type: Number, default: 5},
-    initTags: {type: Array, default: () => []}
-  },
-  model: {
-    prop: 'initTags',
-    event: 'tagsChange'
+    maxTagNum: {type: Number, default: 5}
   },
   data () {
     return {
-      tags: []
+      tagInputs: []
     }
   },
   methods: {
     onAddTag () {
-      if (this.tags.length) {
-        if (this.tags.length >= this.maxTagNum) return
-        for (let item of this.tags) {
+      if (this.tagInputs.length) {
+        if (this.tagInputs.length >= this.maxTagNum) return
+        for (let item of this.tagInputs) {
           if (item.value === '') return
         }
       }
-      this.tags.push('')
+      this.tagInputs.push({
+        component: tagInput,
+        value: '',
+        id: Date.now()
+      })
     },
     onDeleteTag (index) {
-      if (this.tags.length) {
-        this.tags.splice(index, 1)
+      if (this.tagInputs.length) {
+        this.tagInputs.splice(index, 1)
       }
     },
     onFocusPrevious (index) {
@@ -55,13 +55,10 @@ export default {
       }
     }
   },
-  watch: {
+  computed: {
     tags () {
-      this.$emit('tagsChange', this.tags)
+      return this.tagInputs.map(e => e.value)
     }
-  },
-  created () {
-    this.tags = this.initTags
   }
 }
 </script>

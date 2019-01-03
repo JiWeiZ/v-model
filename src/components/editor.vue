@@ -1,23 +1,21 @@
 <template>
   <div>
-    <tag-box :maxTagNum="3">新建一级标签（最多3个）</tag-box>
-    <tag-box :maxTagNum="6">新建二级标签（最多6个）</tag-box>
-    <mul-input></mul-input>
+    <tag-box v-model="tags1" :maxTagNum="3">新建一级标签（最多3个）</tag-box>
+    <tag-box v-model="tags2" :maxTagNum="6">新建二级标签（最多6个）</tag-box>
   </div>
 </template>
 
 <script>
 import tagBox from './tagBox'
-import mulInput from './mulInput'
 
 export default {
   components: {
-    tagBox,
-    mulInput
+    tagBox
   },
   data () {
     return {
-      tags1: []
+      tags1: [],
+      tags2: [5, 6, 7]
     }
   }
 }
