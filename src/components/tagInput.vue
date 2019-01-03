@@ -62,17 +62,17 @@ export default {
           if (vm.tagValue === '') vm.emitDeleteTag()
         },
         keydown (e) {
-          if (e.keyCode === 8 || e.keyCode === 46) {
+          if ((e.keyCode === 8 || e.keyCode === 46) && vm.tagValue === '') {
             vm.readyToDelete = true
           }
         },
         keyup (e) {
-          if (e.keyCode === 8 || e.keyCode === 46) {
-            if (vm.readyToDelete) {
-              vm.emitDeleteTag()
-              vm.$emit('focusPrevious')
-              vm.readyToDelete = false
-            }
+          if ((e.keyCode === 8 || e.keyCode === 46) &&
+          vm.tagValue === '' &&
+          vm.readyToDelete) {
+            vm.emitDeleteTag()
+            vm.$emit('focusPrevious')
+            vm.readyToDelete = false
           }
         }
       })

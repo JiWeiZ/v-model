@@ -54,6 +54,11 @@ export default {
         this.$el.children[index - 1].children[0].focus()
       }
     }
+  },
+  computed: {
+    tags () {
+      return this.tagInputs.map(e => e.value)
+    }
   }
 }
 </script>
